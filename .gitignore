@@ -1,0 +1,4 @@
+target
+.idea
+.mvn/wrapper/maven-wrapper.jar
+src/main/resources
