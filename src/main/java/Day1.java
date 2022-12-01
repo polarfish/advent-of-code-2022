@@ -14,7 +14,7 @@ public class Day1 extends Day {
 
 
     @Override
-    public int part1(String input) {
+    public long part1(String input) {
         int buf = 0;
         int max = 0;
         for (String l : input.split("\n")) {
@@ -28,7 +28,7 @@ public class Day1 extends Day {
         return Math.max(max, buf);
     }
 
-    public int part2(String input) {
+    public long part2(String input) {
         int buf = 0;
         SortedSet<Integer> set = new TreeSet<>(Comparator.comparingInt(i -> (int) i).reversed());
         for (String l : input.split("\n")) {
