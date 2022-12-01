@@ -18,18 +18,17 @@ public abstract class Day {
         this.part2Label = part2Label;
     }
 
+    void test() {
+        System.out.printf("Running Day %d (sample)%n", n);
+        run(readFile("Day%d_sample.txt".formatted(n)));
+    }
 
     void solve() {
-
-        String input;
-        try {
-            input = Files.readString(Path.of("src/main/resources/Day%d.txt".formatted(n)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
         System.out.printf("Running Day %d%n", n);
+        run(readFile("Day%d.txt".formatted(n)));
+    }
 
+    private void run(String input) {
         long start1 = System.currentTimeMillis();
         int res1 = part1(input);
         long time1 = System.currentTimeMillis() - start1;
@@ -47,4 +46,11 @@ public abstract class Day {
 
     abstract int part2(String input);
 
+    private String readFile(String fileName) {
+        try {
+            return Files.readString(Path.of("src/main/resources/" + fileName));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
