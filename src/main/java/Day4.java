@@ -12,28 +12,30 @@ public class Day4 extends Day {
 
 
     @Override
-    public long part1(String input) {
-        return Arrays.stream(input.split("\n"))
-            .map(l -> l.split("[,\\-]"))
-            .map(a -> new int[]{
-                Integer.parseInt(a[0]),
-                Integer.parseInt(a[1]),
-                Integer.parseInt(a[2]),
-                Integer.parseInt(a[3])})
-            .filter(a -> isFullyContained(a[0], a[1], a[2], a[3]))
-            .count();
+    public String part1(String input) {
+        return String.valueOf(
+            Arrays.stream(input.split("\n"))
+                .map(l -> l.split("[,\\-]"))
+                .map(a -> new int[]{
+                    Integer.parseInt(a[0]),
+                    Integer.parseInt(a[1]),
+                    Integer.parseInt(a[2]),
+                    Integer.parseInt(a[3])})
+                .filter(a -> isFullyContained(a[0], a[1], a[2], a[3]))
+                .count());
     }
 
-    public long part2(String input) {
-        return Arrays.stream(input.split("\n"))
-            .map(l -> l.split("[,\\-]"))
-            .map(a -> new int[]{
-                Integer.parseInt(a[0]),
-                Integer.parseInt(a[1]),
-                Integer.parseInt(a[2]),
-                Integer.parseInt(a[3])})
-            .filter(a -> isOverlap(a[0], a[1], a[2], a[3]))
-            .count();
+    public String part2(String input) {
+        return String.valueOf(
+            Arrays.stream(input.split("\n"))
+                .map(l -> l.split("[,\\-]"))
+                .map(a -> new int[]{
+                    Integer.parseInt(a[0]),
+                    Integer.parseInt(a[1]),
+                    Integer.parseInt(a[2]),
+                    Integer.parseInt(a[3])})
+                .filter(a -> isOverlap(a[0], a[1], a[2], a[3]))
+                .count());
     }
 
 

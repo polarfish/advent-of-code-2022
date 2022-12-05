@@ -42,14 +42,16 @@ public class Day2 extends Day {
     }
 
     @Override
-    public long part1(String input) {
-        return Arrays.stream(input.split("\n"))
-            .mapToInt(this::getScore1).sum();
+    public String part1(String input) {
+        return String.valueOf(
+            Arrays.stream(input.split("\n"))
+                .mapToInt(this::getScore1).sum());
     }
 
 
-    public long part2(String input) {
-        return Arrays.stream(input.split("\n"))
-            .mapToInt(this::getScore2).sum();
+    public String part2(String input) {
+        return String.valueOf(
+            Arrays.stream(input.split("\n"))
+                .mapToInt(this::getScore2).sum());
     }
 }

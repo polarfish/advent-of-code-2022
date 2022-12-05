@@ -15,20 +15,22 @@ public class Day3 extends Day {
     }
 
     @Override
-    public long part1(String input) {
-        return Arrays.stream(input.split("\n"))
-            .map(this::findMisplacedItem)
-            .mapToInt(this::calculatePriority)
-            .sum();
+    public String part1(String input) {
+        return String.valueOf(
+            Arrays.stream(input.split("\n"))
+                .map(this::findMisplacedItem)
+                .mapToInt(this::calculatePriority)
+                .sum());
     }
 
 
-    public long part2(String input) {
-        return Lists.partition(List.of(input.split("\n")), 3)
-            .stream()
-            .map(this::findBadgeItem)
-            .mapToInt(this::calculatePriority)
-            .sum();
+    public String part2(String input) {
+        return String.valueOf(
+            Lists.partition(List.of(input.split("\n")), 3)
+                .stream()
+                .map(this::findBadgeItem)
+                .mapToInt(this::calculatePriority)
+                .sum());
     }
 
     private Character findMisplacedItem(String itemsList) {

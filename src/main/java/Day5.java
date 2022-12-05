@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Day5 extends Day {
 
     Day5() {
-        super(5, "Crate Mover 9000", "Crate Mover 9001");
+        super(5, "Using Crate Mover 9000", "Using Crate Mover 9001");
     }
 
     public static void main(String[] args) {
@@ -21,17 +21,15 @@ public class Day5 extends Day {
 
 
     @Override
-    public long part1(String input) {
-        partSolution(input, false);
-        return 0;
+    public String part1(String input) {
+        return partSolution(input, false);
     }
 
-    public long part2(String input) {
-        partSolution(input, true);
-        return 0;
+    public String part2(String input) {
+        return partSolution(input, true);
     }
 
-    private void partSolution(String input, boolean isCrateMover9001) {
+    private String partSolution(String input, boolean isCrateMover9001) {
         Pattern instructionPattern = Pattern.compile("move (\\d+) from (\\d+) to (\\d+)");
         String[] lines = input.split("\n");
 
@@ -80,10 +78,9 @@ public class Day5 extends Day {
             }
         }
 
-        String answer = stacksMap.values().stream()
+        return stacksMap.values().stream()
             .map(Deque::peek)
             .map(String::valueOf)
             .collect(Collectors.joining(""));
-        System.out.println(answer);
     }
 }
