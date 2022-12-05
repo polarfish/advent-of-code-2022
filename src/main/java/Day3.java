@@ -1,3 +1,4 @@
+import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,15 +24,11 @@ public class Day3 extends Day {
 
 
     public long part2(String input) {
-        String[] rucksacks = input.split("\n");
-
-        long total = 0;
-        for (int i = 0; i < rucksacks.length; i += 3) {
-            total += calculatePriority(
-                findBadgeItem(List.of(rucksacks[i], rucksacks[i + 1], rucksacks[i + 2])));
-        }
-
-        return total;
+        return Lists.partition(List.of(input.split("\n")), 3)
+            .stream()
+            .map(this::findBadgeItem)
+            .mapToInt(this::calculatePriority)
+            .sum();
     }
 
     private Character findMisplacedItem(String itemsList) {
