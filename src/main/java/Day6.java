@@ -36,6 +36,11 @@ public class Day6 extends Day {
     }
 
     private String partSolution(String input, int limit) {
+        return partSolution2(input, limit);
+    }
+
+    // iterate > substring > create-set > compare-length
+    private String partSolution1(String input, int limit) {
         for (int i = 0; i < input.length(); i++) {
             if (i >= limit) {
                 Set<Character> set = new HashSet<>();
@@ -44,6 +49,39 @@ public class Day6 extends Day {
                 }
                 if (set.size() == limit) {
                     return String.valueOf(i);
+                }
+            }
+
+        }
+        return "";
+    }
+
+    // iterate > update-registry-array-and-set > compare-length
+    private String partSolution2(String input, int limit) {
+        int[] reg = new int[26];
+        Set<Integer> set = new HashSet<>(26);
+        for (int i = 0; i < input.length(); i++) {
+            int headPos = input.charAt(i) - 97;
+            reg[headPos] += 1;
+
+            if (reg[headPos] == 1) {
+                set.add(headPos);
+            } else {
+                set.remove(headPos);
+            }
+
+            if (i >= limit - 1) {
+                if (set.size() == limit) {
+                    return String.valueOf(i + 1);
+                }
+
+                int tailPos = input.charAt(i - limit + 1) - 97;
+                reg[tailPos] -= 1;
+
+                if (reg[tailPos] == 1) {
+                    set.add(tailPos);
+                } else {
+                    set.remove(tailPos);
                 }
             }
 
