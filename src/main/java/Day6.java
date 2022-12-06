@@ -59,7 +59,7 @@ public class Day6 extends Day {
     // iterate > update-registry-array-and-set > compare-length
     private String partSolution2(String input, int limit) {
         int[] reg = new int[26];
-        Set<Integer> set = new HashSet<>(26);
+        Set<Integer> set = new HashSet<>();
         for (int i = 0; i < input.length(); i++) {
             int headPos = input.charAt(i) - 97;
             reg[headPos] += 1;
