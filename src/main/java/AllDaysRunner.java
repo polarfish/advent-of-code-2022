@@ -1,11 +1,19 @@
+import java.util.stream.Stream;
+
 public class AllDaysRunner {
+
     public static void main(String[] args) {
-        new Day1().run();
-        new Day2().run();
-        new Day3().run();
-        new Day4().run();
-        new Day5().run();
-        new Day6().run();
+        Stream.of(
+            new Day1(),
+            new Day2(),
+            new Day3(),
+            new Day4(),
+            new Day5(),
+            new Day6()
+        ).forEach(day -> {
+            System.out.println();
+            day.run();
+        });
     }
 
 }
