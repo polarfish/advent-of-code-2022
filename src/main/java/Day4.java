@@ -7,7 +7,13 @@ public class Day4 extends Day {
     }
 
     public static void main(String[] args) {
-        new Day4().solve();
+        Day4 day = new Day4();
+
+        assertEquals(2, day.part1(readFile("Day4_sample.txt")));
+
+        assertEquals(4, day.part2(readFile("Day4_sample.txt")));
+
+        day.run();
     }
 
 

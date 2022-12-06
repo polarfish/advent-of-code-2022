@@ -8,13 +8,19 @@ public class Day2 extends Day {
     }
 
     public static void main(String[] args) {
-        new Day2().solve();
+        Day2 day = new Day2();
+
+        assertEquals(15, day.part1(readFile("Day2_sample.txt")));
+
+        assertEquals(12, day.part2(readFile("Day2_sample.txt")));
+
+        day.run();
     }
 
-    static Map<Character, Character> LEFT_COLUMN_SHAPE_TRANSLATION = Map.of('A', 'R', 'B', 'P', 'C', 'S');
-    static Map<Character, Character> RIGHT_COLUMN_SHAPE_TRANSLATION = Map.of('X', 'R', 'Y', 'P', 'Z', 'S');
-    static Map<Character, Character> RIGHT_COLUMN_OUTCOME_TRANSLATION = Map.of('X', 'L', 'Y', 'D', 'Z', 'W');
-    static Map<Character, Integer> SHAPE_SCORE = Map.of('R', 1, 'P', 2, 'S', 3);
+    static final Map<Character, Character> LEFT_COLUMN_SHAPE_TRANSLATION = Map.of('A', 'R', 'B', 'P', 'C', 'S');
+    static final Map<Character, Character> RIGHT_COLUMN_SHAPE_TRANSLATION = Map.of('X', 'R', 'Y', 'P', 'Z', 'S');
+    static final Map<Character, Character> RIGHT_COLUMN_OUTCOME_TRANSLATION = Map.of('X', 'L', 'Y', 'D', 'Z', 'W');
+    static final Map<Character, Integer> SHAPE_SCORE = Map.of('R', 1, 'P', 2, 'S', 3);
 
     private static final Map<Character, Map<Character, Integer>> GAME_SCORE = Map.of(
         'R', Map.of('R', 3, 'P', 6, 'S', 0),

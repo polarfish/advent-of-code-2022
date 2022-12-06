@@ -1,31 +1,27 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public abstract class Day {
 
-    private final int n;
+    private final int dayNumber;
     private final String part1Label;
     private final String part2Label;
 
-    Day(int n) {
-        this(n, "Part 1 result", "Part 2 result");
+    Day(int dayNumber) {
+        this(dayNumber, "Part 1 result", "Part 2 result");
     }
 
-    Day(int n, String part1Label, String part2Label) {
-        this.n = n;
+    Day(int dayNumber, String part1Label, String part2Label) {
+        this.dayNumber = dayNumber;
         this.part1Label = part1Label;
         this.part2Label = part2Label;
     }
 
-    void test() {
-        System.out.printf("Running Day %d (sample)%n", n);
-        run(readFile("Day%d_sample.txt".formatted(n)));
-    }
-
-    void solve() {
-        System.out.printf("Running Day %d%n", n);
-        run(readFile("Day%d.txt".formatted(n)));
+    void run() {
+        System.out.printf("Running Day %d%n", dayNumber);
+        run(readFile("Day%d.txt".formatted(dayNumber)));
     }
 
     private void run(String input) {
@@ -46,11 +42,21 @@ public abstract class Day {
 
     abstract String part2(String input);
 
-    private String readFile(String fileName) {
+    public static String readFile(String fileName) {
         try {
             return Files.readString(Path.of("src/main/resources/" + fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void assertEquals(long expected, String actual) {
+        assertEquals(String.valueOf(expected), actual);
+    }
+
+    public static void assertEquals(String expected, String actual) {
+        if (!Objects.equals(expected, actual)) {
+            throw new AssertionError("expected: %s, actual: %s".formatted(expected, actual));
         }
     }
 }

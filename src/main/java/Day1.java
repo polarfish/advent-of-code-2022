@@ -9,7 +9,13 @@ public class Day1 extends Day {
     }
 
     public static void main(String[] args) {
-        new Day1().solve();
+        Day1 day = new Day1();
+
+        assertEquals(24000, day.part1(readFile("Day1_sample.txt")));
+
+        assertEquals(45000, day.part2(readFile("Day1_sample.txt")));
+
+        day.run();
     }
 
 

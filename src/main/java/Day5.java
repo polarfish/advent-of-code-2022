@@ -16,7 +16,13 @@ public class Day5 extends Day {
     }
 
     public static void main(String[] args) {
-        new Day5().solve();
+        Day5 day = new Day5();
+
+        assertEquals("CMZ", day.part1(readFile("Day5_sample.txt")));
+
+        assertEquals("MCD", day.part2(readFile("Day5_sample.txt")));
+
+        day.run();
     }
 
 

@@ -4,11 +4,25 @@ import java.util.Set;
 public class Day6 extends Day {
 
     Day6() {
-        super(6);
+        super(6, "start-of-packet marker after", "start-of-message marker after");
     }
 
     public static void main(String[] args) {
-        new Day6().solve();
+        Day6 day = new Day6();
+
+        assertEquals(7, day.part1(readFile("Day6_sample.txt")));
+        assertEquals(5, day.part1(readFile("Day6_sample2.txt")));
+        assertEquals(6, day.part1(readFile("Day6_sample3.txt")));
+        assertEquals(10, day.part1(readFile("Day6_sample4.txt")));
+        assertEquals(11, day.part1(readFile("Day6_sample5.txt")));
+
+        assertEquals(19, day.part2(readFile("Day6_sample.txt")));
+        assertEquals(23, day.part2(readFile("Day6_sample2.txt")));
+        assertEquals(23, day.part2(readFile("Day6_sample3.txt")));
+        assertEquals(29, day.part2(readFile("Day6_sample4.txt")));
+        assertEquals(26, day.part2(readFile("Day6_sample5.txt")));
+
+        day.run();
     }
 
 
