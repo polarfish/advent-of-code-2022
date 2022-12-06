@@ -39,7 +39,7 @@ public class Day6 extends Day {
         return partSolution3(input, limit);
     }
 
-    // iterate > substring > create-set > compare-length
+    // iterate > substring > create-uniqueness-set > compare-length
     private String partSolution1(String input, int limit) {
         for (int i = 0; i < input.length(); i++) {
             if (i >= limit) {
