@@ -36,7 +36,7 @@ public class Day6 extends Day {
     }
 
     private String partSolution(String input, int limit) {
-        return partSolution2(input, limit);
+        return partSolution3(input, limit);
     }
 
     // iterate > substring > create-set > compare-length
@@ -56,7 +56,7 @@ public class Day6 extends Day {
         return "";
     }
 
-    // iterate > update-registry-array-and-set > compare-length
+    // iterate > update-registry-array-and-uniqueness-set > compare-length
     private String partSolution2(String input, int limit) {
         int[] reg = new int[26];
         Set<Integer> set = new HashSet<>();
@@ -82,6 +82,39 @@ public class Day6 extends Day {
                     set.add(tailPos);
                 } else {
                     set.remove(tailPos);
+                }
+            }
+
+        }
+        return "";
+    }
+
+    // iterate > update-registry-array-and-uniqueness-counter > compare-counter
+    private String partSolution3(String input, int limit) {
+        int[] reg = new int[26];
+        int uniqueCount = 0;
+        for (int i = 0; i < input.length(); i++) {
+            int headPos = input.charAt(i) - 97;
+            reg[headPos] += 1;
+
+            if (reg[headPos] == 1) {
+                uniqueCount++;
+            } else if (reg[headPos] == 2) {
+                uniqueCount--;
+            }
+
+            if (i >= limit - 1) {
+                if (uniqueCount == limit) {
+                    return String.valueOf(i + 1);
+                }
+
+                int tailPos = input.charAt(i - limit + 1) - 97;
+                reg[tailPos] -= 1;
+
+                if (reg[tailPos] == 1) {
+                    uniqueCount++;
+                } else if (reg[tailPos] == 0) {
+                    uniqueCount--;
                 }
             }
 
