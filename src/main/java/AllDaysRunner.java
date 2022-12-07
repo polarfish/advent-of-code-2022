@@ -3,6 +3,7 @@ import java.util.stream.Stream;
 public class AllDaysRunner {
 
     public static void main(String[] args) {
+        System.out.println("Running Advent Of Code 2022");
         Stream.of(
             new Day1(),
             new Day2(),
