@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.PriorityQueue;
 import java.util.TreeSet;
 
 public class Day7 extends Day {
@@ -88,7 +87,6 @@ public class Day7 extends Day {
     }
 
     Long calculateDirectorySize(ElfDir dir, Collection<Long> sizes) {
-        PriorityQueue<Long> a = new PriorityQueue<>();
         long size = dir.files.values().stream().mapToLong(ElfFile::size).sum()
                     + dir.dirs.values().stream().mapToLong(d -> calculateDirectorySize(d, sizes)).sum();
         sizes.add(size);
