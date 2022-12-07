@@ -1,4 +1,3 @@
-import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +31,7 @@ public class Day3 extends Day {
 
     public String part2(String input) {
         return String.valueOf(
-            Lists.partition(List.of(input.split("\n")), 3)
+            partition(List.of(input.split("\n")), 3)
                 .stream()
                 .map(this::findBadgeItem)
                 .mapToInt(this::calculatePriority)

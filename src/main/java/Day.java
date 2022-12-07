@@ -1,7 +1,10 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public abstract class Day {
 
@@ -48,6 +51,13 @@ public abstract class Day {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static <T> List<List<T>> partition(List<T> list, int size) {
+        return Stream.iterate(0, i -> i <= list.size(), i -> i + size)
+            .map(i -> list.subList(i, Math.min(i + size, list.size())))
+            .filter(Predicate.not(List::isEmpty))
+            .toList();
     }
 
     public static void assertEquals(long expected, String actual) {
