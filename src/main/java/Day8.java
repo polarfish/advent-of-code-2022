@@ -55,10 +55,8 @@ public class Day8 extends Day {
     int processForest(int[][] arr, BiFunction<int[][], int[], Integer> map, IntBinaryOperator reduce) {
         int[] coords = new int[2];
         int acc = 0;
-        for (int i = 0; i < arr.length; i++) {
-            coords[0] = i;
-            for (int j = 0; j < arr[0].length; j++) {
-                coords[1] = j;
+        for (coords[0] = 0; coords[0] < arr.length; coords[0]++) {
+            for (coords[1] = 0; coords[1] < arr[0].length; coords[1]++) {
                 acc = reduce.applyAsInt(acc, map.apply(arr, coords));
             }
         }
