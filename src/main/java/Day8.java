@@ -69,7 +69,7 @@ public class Day8 extends Day {
         int tree = arr[i][j];
         int h = arr.length;
         int w = arr.length;
-        int[] visibility = new int[]{1, 1, 1, 1}; // default - visible from all 4 directions
+        int[] visibility = {1, 1, 1, 1}; // default - visible from all 4 directions
 
         if (i == 0 || j == 0 || i == h - 1 || j == w - 1) {
             return 1;
@@ -116,7 +116,7 @@ public class Day8 extends Day {
         int tree = arr[i][j];
         int h = arr.length;
         int w = arr.length;
-        int[] scenicScores = new int[]{0, 0, 0, 0}; // default - zero scenery from all 4 directions
+        int[] scenicScores = {0, 0, 0, 0}; // default - zero scenery from all 4 directions
 
         if (i == 0 || j == 0 || i == h - 1 || j == w - 1) {
             return 0;
