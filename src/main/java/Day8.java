@@ -1,3 +1,4 @@
+import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
 import java.util.stream.IntStream;
 
@@ -51,17 +52,22 @@ public class Day8 extends Day {
         return arr;
     }
 
-    int processForest(int[][] arr, ForestTreeOperator map, IntBinaryOperator reduce) {
+    int processForest(int[][] arr, BiFunction<int[][], int[], Integer> map, IntBinaryOperator reduce) {
+        int[] coords = new int[2];
         int acc = 0;
         for (int i = 0; i < arr.length; i++) {
+            coords[0] = i;
             for (int j = 0; j < arr[0].length; j++) {
-                acc = reduce.applyAsInt(acc, map.apply(arr, i, j));
+                coords[1] = j;
+                acc = reduce.applyAsInt(acc, map.apply(arr, coords));
             }
         }
         return acc;
     }
 
-    int calculateVisibility(int[][] arr, int i, int j) {
+    int calculateVisibility(int[][] arr, int[] coords) {
+        int i = coords[0];
+        int j = coords[1];
         int tree = arr[i][j];
         int h = arr.length;
         int w = arr.length;
@@ -106,7 +112,9 @@ public class Day8 extends Day {
         return Integer.signum(IntStream.of(visibility).sum());
     }
 
-    int calculateScenicScore(int[][] arr, int i, int j) {
+    int calculateScenicScore(int[][] arr, int[] coords) {
+        int i = coords[0];
+        int j = coords[1];
         int tree = arr[i][j];
         int h = arr.length;
         int w = arr.length;
@@ -149,12 +157,6 @@ public class Day8 extends Day {
         }
 
         return IntStream.of(scenicScores).reduce(1, (l, r) -> l * r);
-    }
-
-    @FunctionalInterface
-    public interface ForestTreeOperator {
-
-        int apply(int[][] arr, int i, int j);
     }
 
 }
