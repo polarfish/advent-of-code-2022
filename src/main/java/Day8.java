@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
 import java.util.stream.IntStream;
@@ -5,15 +7,17 @@ import java.util.stream.IntStream;
 public class Day8 extends Day {
 
     Day8() {
-        super(8, "Number of visible tree", "Best scenic score");
+        super(8, "Number of visible trees", "Best scenic score");
     }
 
     public static void main(String[] args) {
         Day8 day = new Day8();
 
         assertEquals(21, day.part1(readFile("Day8_sample.txt")));
+        assertEquals(1688, day.part1(readFile("Day8.txt")));
 
         assertEquals(8, day.part2(readFile("Day8_sample.txt")));
+        assertEquals(410400, day.part2(readFile("Day8.txt")));
 
         day.run();
     }
@@ -32,11 +36,50 @@ public class Day8 extends Day {
     @Override
     public String part2(String input) {
         return String.valueOf(
-            processForest(
-                prepareForest(input),
-                this::calculateScenicScore,
-                Integer::max)
+            solvePart2Solution2(input)
         );
+    }
+
+    // check all directions for every point
+    int solvePart2Solution1(String input) {
+        return processForest(
+            prepareForest(input),
+            this::calculateScenicScore,
+            Integer::max);
+    }
+
+    // use monotonic decreasing stack
+    int solvePart2Solution2(String input) {
+        int[][] arr = prepareForest(input);
+
+        int[][] buf = initialiseScoreBuffer(new int[arr.length][arr[0].length]);
+
+        for (int i = 1; i < arr.length - 1; i++) {
+            MonotonicDecreasingStack left = new MonotonicDecreasingStack();
+            MonotonicDecreasingStack right = new MonotonicDecreasingStack();
+            left.push(0, arr[i][0]);
+            right.push(0, arr[i][arr[0].length - 1]);
+
+            for (int j = 1; j < arr[0].length - 1; j++) {
+                buf[i][j] *= left.push(j, arr[i][j]);
+                buf[i][arr[0].length - j - 1] *= right.push(j, arr[i][arr[0].length - j - 1]);
+            }
+        }
+
+        for (int j = 1; j < arr[0].length - 1; j++) {
+            MonotonicDecreasingStack top = new MonotonicDecreasingStack();
+            MonotonicDecreasingStack bottom = new MonotonicDecreasingStack();
+            top.push(0, arr[0][j]);
+            bottom.push(0, arr[arr.length - 1][j]);
+            for (int i = 1; i < arr.length - 1; i++) {
+                buf[i][j] *= top.push(i, arr[i][j]);
+                buf[arr.length - i - 1][j] *= bottom.push(i, arr[arr.length - i - 1][j]);
+            }
+        }
+
+        return Arrays.stream(buf)
+            .mapToInt(line -> Arrays.stream(line).max().orElseThrow())
+            .max().orElseThrow();
     }
 
     int[][] prepareForest(String input) {
@@ -50,6 +93,15 @@ public class Day8 extends Day {
         }
 
         return arr;
+    }
+
+    int[][] initialiseScoreBuffer(int[][] buf) {
+        for (int i = 1; i < buf.length - 1; i++) {
+            for (int j = 1; j < buf[0].length - 1; j++) {
+                buf[i][j] = 1;
+            }
+        }
+        return buf;
     }
 
     int processForest(int[][] arr, BiFunction<int[][], int[], Integer> map, IntBinaryOperator reduce) {
@@ -155,6 +207,26 @@ public class Day8 extends Day {
         }
 
         return IntStream.of(scenicScores).reduce(1, (l, r) -> l * r);
+    }
+
+    record MonotonicDecreasingStack(ArrayDeque<Tree> stack) {
+
+        MonotonicDecreasingStack() {
+            this(new ArrayDeque<>());
+        }
+
+        int push(int position, int height) {
+            while (!stack.isEmpty() && stack.peek().height() < height) {
+                stack.pop();
+            }
+            int score = stack.isEmpty() ? position : (position - stack.peek().position());
+            stack.push(new Tree(position, height));
+            return score;
+        }
+    }
+
+    record Tree(int position, int height) {
+
     }
 
 }
