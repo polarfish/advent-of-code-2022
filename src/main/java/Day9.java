@@ -71,15 +71,9 @@ public class Day9 extends Day {
         int dy = head[1] - tail[1];
         int dyAbs = Math.abs(dy);
 
-        if (dxAbs > 1 && dyAbs > 1) {
+        if (dxAbs > 1 || dyAbs > 1) {
             tail[0] += Integer.signum(dx);
             tail[1] += Integer.signum(dy);
-        } else if (dxAbs > 1) {
-            tail[0] += Integer.signum(dx);
-            tail[1] = head[1];
-        } else if (dyAbs > 1) {
-            tail[1] += Integer.signum(dy);
-            tail[0] = head[0];
         }
     }
 
