@@ -8,3 +8,4 @@
 - [Day 6](src/main/java/Day6.java)
 - [Day 7](src/main/java/Day7.java)
 - [Day 8](src/main/java/Day8.java)
+- [Day 9](src/main/java/Day9.java)
