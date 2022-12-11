@@ -14,7 +14,8 @@ public class AllDaysRunner {
             new Day7(),
             new Day8(),
             new Day9(),
-            new Day10()
+            new Day10(),
+            new Day11()
         ).forEach(day -> {
             System.out.println();
             day.run();

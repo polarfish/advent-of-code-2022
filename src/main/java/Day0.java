@@ -20,6 +20,7 @@ public class Day0 extends Day {
         return String.valueOf(input.length());
     }
 
+    @Override
     public String part2(String input) {
         return String.valueOf(input.length());
     }
