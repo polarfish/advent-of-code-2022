@@ -17,9 +17,7 @@ public class Day11 extends Day {
         Day11 day = new Day11();
 
         assertEquals(10605, day.part1(readFile("Day11_sample.txt")));
-        assertEquals(55930, day.part1(readFile("Day11.txt")));
         assertEquals(2713310158L, day.part2(readFile("Day11_sample.txt")));
-        assertEquals(14636993466L, day.part2(readFile("Day11.txt")));
 
         day.run();
     }
