@@ -1,15 +1,12 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class Day12 extends Day {
 
@@ -138,10 +135,15 @@ public class Day12 extends Day {
 
     }
 
-    record Node(int x, int y, int height, List<Node> connectedNodes, Set<Node> connectedFromNodes) {
+    record Node(int x, int y, int height, Set<Node> connectedNodes, Set<Node> connectedFromNodes) {
 
         Node(int x, int y, int height) {
-            this(x, y, height, new ArrayList<>(), new HashSet<>());
+            this(x, y, height, new HashSet<>(), new HashSet<>());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return (this == obj);
         }
 
         @Override
@@ -151,14 +153,6 @@ public class Day12 extends Day {
 
         @Override
         public String toString() {
-            return "[x=%d,y=%d,h=%d] connected to connectedNodes=[%s]}".formatted(
-                x, y, height,
-                connectedNodes.stream()
-                    .map(Node::toStringShort)
-                    .collect(Collectors.joining(",")));
-        }
-
-        public String toStringShort() {
             return "[x=%d,y=%d,h=%d]".formatted(x, y, height);
         }
     }
