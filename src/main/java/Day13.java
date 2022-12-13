@@ -27,13 +27,13 @@ public class Day13 extends Day {
         List<List<ListNode>> pairs = partition(
             Arrays.stream(input.split("\n"))
                 .filter(Predicate.not(String::isEmpty))
-                .map(this::parseNode)
+                .map(ListNode::parseNode)
                 .toList(),
             2);
 
         int result = 0;
         for (int i = 0; i < pairs.size(); i++) {
-            if (compare(pairs.get(i).get(0), pairs.get(i).get(1)) == -1) {
+            if (pairs.get(i).get(0).compareTo(pairs.get(i).get(1)) < 0) {
                 result += (i + 1);
             }
         }
@@ -43,16 +43,16 @@ public class Day13 extends Day {
 
     @Override
     public String part2(String input) {
-        ListNode extra6 = parseNode("[[6]]");
-        ListNode extra2 = parseNode("[[2]]");
+        ListNode extra6 = ListNode.parseNode("[[6]]");
+        ListNode extra2 = ListNode.parseNode("[[2]]");
 
         List<ListNode> nodes = Stream.concat(
                 Stream.of(extra2, extra6),
                 Arrays.stream(input.split("\n"))
                     .filter(Predicate.not(String::isEmpty))
-                    .map(this::parseNode)
+                    .map(ListNode::parseNode)
             )
-            .sorted(this::compare)
+            .sorted()
             .toList();
 
         return String.valueOf(
@@ -60,67 +60,12 @@ public class Day13 extends Day {
         );
     }
 
-    private int compare(Node left, Node right) {
-        if (left instanceof ValueNode leftValue && right instanceof ValueNode rightValue) {
-            return Integer.compare(leftValue.value(), rightValue.value());
-        } else if (left instanceof ListNode leftList && right instanceof ListNode rightList) {
-            Iterator<Node> leftIterator = leftList.nodes().iterator();
-            Iterator<Node> rightIterator = rightList.nodes().iterator();
-            while (leftIterator.hasNext() || rightIterator.hasNext()) {
-                if (!leftIterator.hasNext()) {
-                    return -1;
-                }
-                if (!rightIterator.hasNext()) {
-                    return 1;
-                }
-
-                int result = compare(leftIterator.next(), rightIterator.next());
-
-                if (result != 0) {
-                    return result;
-                }
-            }
-            return 0;
-        } else {
-            return compare(
-                left instanceof ValueNode ? new ListNode(left) : left,
-                right instanceof ValueNode ? new ListNode(right) : right
-            );
-        }
-    }
-
-    ListNode parseNode(String line) {
-        ListNode current = null;
-        LinkedList<ListNode> stack = new LinkedList<>();
-        for (int i = 0; i < line.length(); i++) {
-            switch (line.charAt(i)) {
-                case '[':
-                    ListNode listNode = new ListNode();
-                    if (current != null) {
-                        current.nodes.add(listNode);
-                        stack.push(current);
-                    }
-                    current = listNode;
-                    break;
-                case ']':
-                    current = stack.isEmpty() ? current : stack.pop();
-                    break;
-                case ',':
-                    break;
-                default:
-                    int value = line.charAt(i + 1) == '0' ? 10 : (line.charAt(i) - 48);
-                    current.nodes.add(new ValueNode(value));
-            }
-        }
-
-        return current;
-    }
 
     interface Node {
 
     }
 
-    record ListNode(List<Node> nodes) implements Node {
+    record ListNode(List<Node> nodes) implements Node, Comparable<ListNode> {
 
         public ListNode() {
             this(new ArrayList<>());
@@ -130,9 +75,74 @@ public class Day13 extends Day {
             this();
             nodes.add(node);
         }
+
+        public static ListNode parseNode(String line) {
+            ListNode current = null;
+            LinkedList<ListNode> stack = new LinkedList<>();
+            for (int i = 0; i < line.length(); i++) {
+                switch (line.charAt(i)) {
+                    case '[':
+                        ListNode listNode = new ListNode();
+                        if (current != null) {
+                            current.nodes.add(listNode);
+                            stack.push(current);
+                        }
+                        current = listNode;
+                        break;
+                    case ']':
+                        current = stack.isEmpty() ? current : stack.pop();
+                        break;
+                    case ',':
+                        break;
+                    default:
+                        int value = line.charAt(i + 1) == '0' ? 10 : (line.charAt(i) - 48);
+                        current.nodes.add(new ValueNode(value));
+                }
+            }
+
+            return current;
+        }
+
+        @Override
+        public int compareTo(ListNode o) {
+            return compare(this, o);
+        }
+
+        private int compare(Node left, Node right) {
+            if (left instanceof ValueNode leftValue && right instanceof ValueNode rightValue) {
+                return leftValue.compareTo(rightValue);
+            } else if (left instanceof ListNode leftList && right instanceof ListNode rightList) {
+                Iterator<Node> leftIterator = leftList.nodes().iterator();
+                Iterator<Node> rightIterator = rightList.nodes().iterator();
+                while (leftIterator.hasNext() || rightIterator.hasNext()) {
+                    if (!leftIterator.hasNext()) {
+                        return -1;
+                    }
+                    if (!rightIterator.hasNext()) {
+                        return 1;
+                    }
+
+                    int result = compare(leftIterator.next(), rightIterator.next());
+
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                return 0;
+            } else {
+                return compare(
+                    left instanceof ValueNode ? new ListNode(left) : left,
+                    right instanceof ValueNode ? new ListNode(right) : right
+                );
+            }
+        }
     }
 
-    record ValueNode(int value) implements Node {
+    record ValueNode(int value) implements Node, Comparable<ValueNode> {
 
+        @Override
+        public int compareTo(ValueNode o) {
+            return Integer.compare(this.value, o.value);
+        }
     }
 }
