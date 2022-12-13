@@ -23,11 +23,11 @@ public abstract class Day {
     }
 
     void run() {
-        System.out.printf("Running Day %d%n", dayNumber);
+        System.out.printf("Running %s%n", getClass().getSimpleName());
         run(readFile("Day%d.txt".formatted(dayNumber)));
     }
 
-    private void run(String input) {
+    void run(String input) {
         long start1 = System.currentTimeMillis();
         String res1 = part1(input);
         long time1 = System.currentTimeMillis() - start1;

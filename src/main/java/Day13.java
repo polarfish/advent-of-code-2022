@@ -3,7 +3,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Day13 extends Day {
@@ -76,6 +78,11 @@ public class Day13 extends Day {
             nodes.add(node);
         }
 
+        @Override
+        public String toString() {
+            return "[%s]".formatted(nodes.stream().map(Objects::toString).collect(Collectors.joining(",")));
+        }
+
         public static ListNode parseNode(String line) {
             ListNode current = null;
             LinkedList<ListNode> stack = new LinkedList<>();
@@ -95,7 +102,9 @@ public class Day13 extends Day {
                     case ',':
                         break;
                     default:
-                        int value = line.charAt(i + 1) == '0' ? 10 : (line.charAt(i) - 48);
+                        int value = Character.isDigit(line.charAt(i + 1))
+                            ? (line.charAt(i) - 48) * 10 + (line.charAt(++i) - 48)
+                            : (line.charAt(i) - 48);
                         current.nodes.add(new ValueNode(value));
                 }
             }
@@ -139,6 +148,11 @@ public class Day13 extends Day {
     }
 
     record ValueNode(int value) implements Node, Comparable<ValueNode> {
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
 
         @Override
         public int compareTo(ValueNode o) {
