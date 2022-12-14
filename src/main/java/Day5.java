@@ -11,18 +11,20 @@ import java.util.stream.Collectors;
 
 public class Day5 extends Day {
 
-    Day5() {
-        super(5, "Using Crate Mover 9000", "Using Crate Mover 9001");
-    }
-
     public static void main(String[] args) {
-        Day5 day = new Day5();
+        Day5 day = new Day5(); // https://adventofcode.com/2022/day/5
 
-        assertEquals("CMZ", day.part1(readFile("Day5_sample.txt")));
+        String sample = readFile("Day5_sample.txt");
+        String full = readFile("Day5.txt");
 
-        assertEquals("MCD", day.part2(readFile("Day5_sample.txt")));
+        assertEquals("CMZ", day.part1(sample));
+        assertEquals("ZWHVFWQWW", day.part1(full));
 
-        day.run();
+        assertEquals("MCD", day.part2(sample));
+        assertEquals("HZFZCCWWV", day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 
@@ -31,6 +33,7 @@ public class Day5 extends Day {
         return partSolution(input, false);
     }
 
+    @Override
     public String part2(String input) {
         return partSolution(input, true);
     }

@@ -3,18 +3,20 @@ import java.util.Map;
 
 public class Day2 extends Day {
 
-    Day2() {
-        super(2, "Total score (second column is the shape)", "Total score (second column the outcome)");
-    }
-
     public static void main(String[] args) {
-        Day2 day = new Day2();
+        Day2 day = new Day2(); // https://adventofcode.com/2022/day/2
 
-        assertEquals(15, day.part1(readFile("Day2_sample.txt")));
+        String sample = readFile("Day2_sample.txt");
+        String full = readFile("Day2.txt");
 
-        assertEquals(12, day.part2(readFile("Day2_sample.txt")));
+        assertEquals(15, day.part1(sample));
+        assertEquals(13526, day.part1(full));
 
-        day.run();
+        assertEquals(12, day.part2(sample));
+        assertEquals(14204, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
     static final Map<Character, Character> LEFT_COLUMN_SHAPE_TRANSLATION = Map.of('A', 'R', 'B', 'P', 'C', 'S');
@@ -54,7 +56,7 @@ public class Day2 extends Day {
                 .mapToInt(this::getScore1).sum());
     }
 
-
+    @Override
     public String part2(String input) {
         return String.valueOf(
             Arrays.stream(input.split("\n"))

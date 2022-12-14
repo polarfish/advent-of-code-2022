@@ -2,18 +2,20 @@ import java.util.Arrays;
 
 public class Day4 extends Day {
 
-    Day4() {
-        super(4, "Fully contains", "Overlaps");
-    }
-
     public static void main(String[] args) {
-        Day4 day = new Day4();
+        Day4 day = new Day4(); // https://adventofcode.com/2022/day/4
 
-        assertEquals(2, day.part1(readFile("Day4_sample.txt")));
+        String sample = readFile("Day4_sample.txt");
+        String full = readFile("Day4.txt");
 
-        assertEquals(4, day.part2(readFile("Day4_sample.txt")));
+        assertEquals(2, day.part1(sample));
+        assertEquals(556, day.part1(full));
 
-        day.run();
+        assertEquals(4, day.part2(sample));
+        assertEquals(876, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 
@@ -31,6 +33,7 @@ public class Day4 extends Day {
                 .count());
     }
 
+    @Override
     public String part2(String input) {
         return String.valueOf(
             Arrays.stream(input.split("\n"))

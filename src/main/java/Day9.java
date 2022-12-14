@@ -3,21 +3,22 @@ import java.util.Set;
 
 public class Day9 extends Day {
 
-    Day9() {
-        super(9,
-            "Positions visited at least once by 2-knots-rope-tail",
-            "Positions visited at least once by 10-knots-rope-tail");
-    }
-
     public static void main(String[] args) {
-        Day9 day = new Day9();
+        Day9 day = new Day9(); // https://adventofcode.com/2022/day/9
 
-        assertEquals(13, day.part1(readFile("Day9_sample.txt")));
+        String sample = readFile("Day9_sample.txt");
+        String sample2 = readFile("Day9_sample2.txt");
+        String full = readFile("Day9.txt");
 
-        assertEquals(1, day.part2(readFile("Day9_sample.txt")));
-        assertEquals(36, day.part2(readFile("Day9_sample2.txt")));
+        assertEquals(13, day.part1(sample));
+        assertEquals(6522, day.part1(full));
 
-        day.run();
+        assertEquals(1, day.part2(sample));
+        assertEquals(36, day.part2(sample2));
+        assertEquals(2717, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 

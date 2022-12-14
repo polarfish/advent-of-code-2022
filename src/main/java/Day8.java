@@ -6,18 +6,21 @@ import java.util.stream.IntStream;
 
 public class Day8 extends Day {
 
-    Day8() {
-        super(8, "Number of visible trees", "Best scenic score");
-    }
-
     public static void main(String[] args) {
-        Day8 day = new Day8();
+        Day8 day = new Day8(); // https://adventofcode.com/2022/day/8
 
-        assertEquals(21, day.part1(readFile("Day8_sample.txt")));
+        String sample = readFile("Day8_sample.txt");
+        String full = readFile("Day8.txt");
 
-        assertEquals(8, day.part2(readFile("Day8_sample.txt")));
+        assertEquals(21, day.part1(sample));
+        assertEquals(1688, day.part1(full));
 
-        day.run();
+        assertEquals(8, day.part2(sample));
+        assertEquals(410400, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2Solution1, "Part 2 result (check all directions)");
+        day.run(full, day::part2Solution2, "Part 2 result (use monotonic decreasing stack)");
     }
 
 
@@ -33,21 +36,20 @@ public class Day8 extends Day {
 
     @Override
     public String part2(String input) {
-        return String.valueOf(
-            solvePart2Solution2(input)
-        );
+        return part2Solution2(input);
     }
 
     // check all directions for every point
-    int solvePart2Solution1(String input) {
-        return processForest(
-            prepareForest(input),
-            this::calculateScenicScore,
-            Integer::max);
+    String part2Solution1(String input) {
+        return String.valueOf(
+            processForest(
+                prepareForest(input),
+                this::calculateScenicScore,
+                Integer::max));
     }
 
     // use monotonic decreasing stack
-    int solvePart2Solution2(String input) {
+    String part2Solution2(String input) {
         int[][] arr = prepareForest(input);
 
         int[][] buf = initialiseScoreBuffer(new int[arr.length][arr[0].length]);
@@ -75,9 +77,10 @@ public class Day8 extends Day {
             }
         }
 
-        return Arrays.stream(buf)
-            .mapToInt(line -> Arrays.stream(line).max().orElseThrow())
-            .max().orElseThrow();
+        return String.valueOf(
+            Arrays.stream(buf)
+                .mapToInt(line -> Arrays.stream(line).max().orElseThrow())
+                .max().orElseThrow());
     }
 
     int[][] prepareForest(String input) {

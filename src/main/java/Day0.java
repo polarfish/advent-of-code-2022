@@ -1,27 +1,29 @@
 public class Day0 extends Day {
 
-    Day0() {
-        super(0);
-    }
-
     public static void main(String[] args) {
-        Day0 day = new Day0();
+        Day0 day = new Day0();  // https://adventofcode.com/2022/day/0
 
-        assertEquals(0, day.part1(readFile("Day0_sample.txt")));
+        String sample = readFile("Day0_sample.txt");
+        String full = readFile("Day0.txt");
 
-        assertEquals(0, day.part2(readFile("Day0_sample.txt")));
+        assertEquals(0, day.part1(sample));
+        assertEquals(0, day.part1(full));
 
-        day.run();
+        assertEquals(0, day.part2(sample));
+        assertEquals(0, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 
     @Override
     public String part1(String input) {
-        return String.valueOf(input.length());
+        return "0";
     }
 
     @Override
     public String part2(String input) {
-        return String.valueOf(input.length());
+        return "0";
     }
 }

@@ -10,17 +10,20 @@ import java.util.stream.Stream;
 
 public class Day13 extends Day {
 
-    Day13() {
-        super(13);
-    }
-
     public static void main(String[] args) {
-        Day13 day = new Day13();
+        Day13 day = new Day13();  // https://adventofcode.com/2022/day/13
 
-        assertEquals(13, day.part1(readFile("Day13_sample.txt")));
-        assertEquals(140, day.part2(readFile("Day13_sample.txt")));
+        String sample = readFile("Day13_sample.txt");
+        String full = readFile("Day13.txt");
 
-        day.run();
+        assertEquals(13, day.part1(sample));
+        assertEquals(4809, day.part1(full));
+
+        assertEquals(140, day.part2(sample));
+        assertEquals(22600, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 

@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 
 public class Day10 extends Day {
 
-    Day10() {
-        super(10, "Sum of six signal strengths", "CRT output");
-    }
-
     public static void main(String[] args) {
-        Day10 day = new Day10();
+        Day10 day = new Day10(); // https://adventofcode.com/2022/day/10
 
-        assertEquals(13140, day.part1(readFile("Day10_sample.txt")));
+        String sample = readFile("Day10_sample.txt");
+        String full = readFile("Day10.txt");
+
+        assertEquals(13140, day.part1(sample));
+        assertEquals(14340, day.part1(full));
 
         assertEquals(
             """
@@ -24,9 +24,20 @@ public class Day10 extends Day {
                 #####.....#####.....#####.....#####.....
                 ######......######......######......####
                 #######.......#######.......#######.....""",
-            day.part2(readFile("Day10_sample.txt")));
+            day.part2(sample));
+        assertEquals(
+            """
+                                
+                ###...##..###....##..##..###..#..#.###..
+                #..#.#..#.#..#....#.#..#.#..#.#..#.#..#.
+                #..#.#..#.#..#....#.#....###..####.#..#.
+                ###..####.###.....#.#....#..#.#..#.###..
+                #....#..#.#....#..#.#..#.#..#.#..#.#....
+                #....#..#.#.....##...##..###..#..#.#....""",
+            day.part2(full));
 
-        day.run();
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 

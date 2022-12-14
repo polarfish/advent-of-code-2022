@@ -9,17 +9,20 @@ import java.util.stream.Collectors;
 
 public class Day11 extends Day {
 
-    Day11() {
-        super(11, "Monkey business after 20 rounds (with relief)", "Monkey business after 10000 rounds");
-    }
-
     public static void main(String[] args) {
-        Day11 day = new Day11();
+        Day11 day = new Day11(); // https://adventofcode.com/2022/day/11
 
-        assertEquals(10605, day.part1(readFile("Day11_sample.txt")));
-        assertEquals(2713310158L, day.part2(readFile("Day11_sample.txt")));
+        String sample = readFile("Day11_sample.txt");
+        String full = readFile("Day11.txt");
 
-        day.run();
+        assertEquals(10605, day.part1(sample));
+        assertEquals(55930, day.part1(full));
+
+        assertEquals(2713310158L, day.part2(sample));
+        assertEquals(14636993466L, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
     @Override

@@ -5,18 +5,20 @@ import java.util.Set;
 
 public class Day3 extends Day {
 
-    Day3() {
-        super(3, "Sum priorities misplaced types", "Sum priorities badge types");
-    }
-
     public static void main(String[] args) {
-        Day3 day = new Day3();
+        Day3 day = new Day3(); // https://adventofcode.com/2022/day/3
 
-        assertEquals(157, day.part1(readFile("Day3_sample.txt")));
+        String sample = readFile("Day3_sample.txt");
+        String full = readFile("Day3.txt");
 
-        assertEquals(70, day.part2(readFile("Day3_sample.txt")));
+        assertEquals(157, day.part1(sample));
+        assertEquals(8018, day.part1(full));
 
-        day.run();
+        assertEquals(70, day.part2(sample));
+        assertEquals(2518, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
     @Override
@@ -28,7 +30,7 @@ public class Day3 extends Day {
                 .sum());
     }
 
-
+    @Override
     public String part2(String input) {
         return String.valueOf(
             partition(List.of(input.split("\n")), 3)

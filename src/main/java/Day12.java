@@ -10,17 +10,20 @@ import java.util.function.Predicate;
 
 public class Day12 extends Day {
 
-    Day12() {
-        super(12, "Minimum steps to go from start to end", "Minimum steps to go from a low hill to end");
-    }
-
     public static void main(String[] args) {
-        Day12 day = new Day12();
+        Day12 day = new Day12(); // https://adventofcode.com/2022/day/12
 
-        assertEquals(31, day.part1(readFile("Day12_sample.txt")));
-        assertEquals(29, day.part2(readFile("Day12_sample.txt")));
+        String sample = readFile("Day12_sample.txt");
+        String full = readFile("Day12.txt");
 
-        day.run();
+        assertEquals(31, day.part1(sample));
+        assertEquals(394, day.part1(full));
+
+        assertEquals(29, day.part2(sample));
+        assertEquals(388, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 

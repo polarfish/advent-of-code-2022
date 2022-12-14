@@ -3,40 +3,47 @@ import java.util.Set;
 
 public class Day6 extends Day {
 
-    Day6() {
-        super(6, "start-of-packet marker after", "start-of-message marker after");
-    }
-
     public static void main(String[] args) {
-        Day6 day = new Day6();
+        Day6 day = new Day6(); // https://adventofcode.com/2022/day/6
 
-        assertEquals(7, day.part1(readFile("Day6_sample.txt")));
-        assertEquals(5, day.part1(readFile("Day6_sample2.txt")));
-        assertEquals(6, day.part1(readFile("Day6_sample3.txt")));
-        assertEquals(10, day.part1(readFile("Day6_sample4.txt")));
-        assertEquals(11, day.part1(readFile("Day6_sample5.txt")));
+        String sample = readFile("Day6_sample.txt");
+        String sample2 = readFile("Day6_sample2.txt");
+        String sample3 = readFile("Day6_sample3.txt");
+        String sample4 = readFile("Day6_sample4.txt");
+        String sample5 = readFile("Day6_sample5.txt");
+        String full = readFile("Day6.txt");
 
-        assertEquals(19, day.part2(readFile("Day6_sample.txt")));
-        assertEquals(23, day.part2(readFile("Day6_sample2.txt")));
-        assertEquals(23, day.part2(readFile("Day6_sample3.txt")));
-        assertEquals(29, day.part2(readFile("Day6_sample4.txt")));
-        assertEquals(26, day.part2(readFile("Day6_sample5.txt")));
+        assertEquals(7, day.part1(sample));
+        assertEquals(5, day.part1(sample2));
+        assertEquals(6, day.part1(sample3));
+        assertEquals(10, day.part1(sample4));
+        assertEquals(11, day.part1(sample5));
+        assertEquals(1833, day.part1(full));
 
-        day.run();
+        assertEquals(19, day.part2(sample));
+        assertEquals(23, day.part2(sample2));
+        assertEquals(23, day.part2(sample3));
+        assertEquals(29, day.part2(sample4));
+        assertEquals(26, day.part2(sample5));
+        assertEquals(3425, day.part2(full));
+
+        day.run(full, input -> day.partSolution1(input, 4), "Part 1 result (substring and create set)");
+        day.run(full, input -> day.partSolution2(input, 4), "Part 1 result (registry array and update set)");
+        day.run(full, input -> day.partSolution3(input, 4), "Part 1 result (registry array and update counter)");
+        day.run(full, input -> day.partSolution1(input, 14), "Part 2 result (substring and create set)");
+        day.run(full, input -> day.partSolution2(input, 14), "Part 2 result (registry array and update set)");
+        day.run(full, input -> day.partSolution3(input, 14), "Part 2 result (registry array and update counter)");
     }
 
 
     @Override
     public String part1(String input) {
-        return partSolution(input, 4);
+        return partSolution3(input, 4);
     }
 
+    @Override
     public String part2(String input) {
-        return partSolution(input, 14);
-    }
-
-    private String partSolution(String input, int limit) {
-        return partSolution3(input, limit);
+        return partSolution3(input, 14);
     }
 
     // iterate > substring > create-uniqueness-set > compare-length

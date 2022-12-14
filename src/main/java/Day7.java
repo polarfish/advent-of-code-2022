@@ -8,18 +8,20 @@ import java.util.TreeSet;
 
 public class Day7 extends Day {
 
-    Day7() {
-        super(7, "Total size of directories of size at most 100000", "Smallest directory to delete for enough space");
-    }
-
     public static void main(String[] args) {
-        Day7 day = new Day7();
+        Day7 day = new Day7(); // https://adventofcode.com/2022/day/7
 
-        assertEquals(95437, day.part1(readFile("Day7_sample.txt")));
+        String sample = readFile("Day7_sample.txt");
+        String full = readFile("Day7.txt");
 
-        assertEquals(24933642, day.part2(readFile("Day7_sample.txt")));
+        assertEquals(95437, day.part1(sample));
+        assertEquals(1644735, day.part1(full));
 
-        day.run();
+        assertEquals(24933642, day.part2(sample));
+        assertEquals(1300850, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 

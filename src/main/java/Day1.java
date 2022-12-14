@@ -4,18 +4,20 @@ import java.util.TreeSet;
 
 public class Day1 extends Day {
 
-    Day1() {
-        super(1, "Elf carrying the most calories", "Top 3 Elves carrying the most calories");
-    }
-
     public static void main(String[] args) {
-        Day1 day = new Day1();
+        Day1 day = new Day1(); // https://adventofcode.com/2022/day/1
 
-        assertEquals(24000, day.part1(readFile("Day1_sample.txt")));
+        String sample = readFile("Day1_sample.txt");
+        String full = readFile("Day1.txt");
 
-        assertEquals(45000, day.part2(readFile("Day1_sample.txt")));
+        assertEquals(24000, day.part1(sample));
+        assertEquals(69883, day.part1(full));
 
-        day.run();
+        assertEquals(45000, day.part2(sample));
+        assertEquals(207576, day.part2(full));
+
+        day.run(full, day::part1, "Part 1 result");
+        day.run(full, day::part2, "Part 2 result");
     }
 
 
@@ -34,6 +36,7 @@ public class Day1 extends Day {
         return String.valueOf(Math.max(max, buf));
     }
 
+    @Override
     public String part2(String input) {
         int buf = 0;
         SortedSet<Integer> set = new TreeSet<>(Comparator.comparingInt(i -> (int) i).reversed());
