@@ -11,8 +11,12 @@ import java.util.stream.Stream;
 
 public abstract class Day {
 
+    String name() {
+        return getClass().getSimpleName();
+    }
+
     void run() {
-        run(readFile("%s.txt".formatted(getClass().getSimpleName())));
+        run(readFile("%s.txt".formatted(name())));
     }
 
     void run(String input) {

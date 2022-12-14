@@ -7,8 +7,8 @@ public class Day1 extends Day {
     public static void main(String[] args) {
         Day1 day = new Day1(); // https://adventofcode.com/2022/day/1
 
-        String sample = readFile("Day1_sample.txt");
-        String full = readFile("Day1.txt");
+        String sample = readFile("%s_sample.txt".formatted(day.name()));
+        String full = readFile("%s.txt".formatted(day.name()));
 
         assertEquals(24000, day.part1(sample));
         assertEquals(69883, day.part1(full));

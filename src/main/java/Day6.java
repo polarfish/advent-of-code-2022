@@ -6,12 +6,12 @@ public class Day6 extends Day {
     public static void main(String[] args) {
         Day6 day = new Day6(); // https://adventofcode.com/2022/day/6
 
-        String sample = readFile("Day6_sample.txt");
-        String sample2 = readFile("Day6_sample2.txt");
-        String sample3 = readFile("Day6_sample3.txt");
-        String sample4 = readFile("Day6_sample4.txt");
-        String sample5 = readFile("Day6_sample5.txt");
-        String full = readFile("Day6.txt");
+        String sample = readFile("%s_sample.txt".formatted(day.name()));
+        String sample2 = readFile("%s_sample2.txt".formatted(day.name()));
+        String sample3 = readFile("%s_sample3.txt".formatted(day.name()));
+        String sample4 = readFile("%s_sample4.txt".formatted(day.name()));
+        String sample5 = readFile("%s_sample5.txt".formatted(day.name()));
+        String full = readFile("%s.txt".formatted(day.name()));
 
         assertEquals(7, day.part1(sample));
         assertEquals(5, day.part1(sample2));

@@ -13,8 +13,8 @@ public class Day13 extends Day {
     public static void main(String[] args) {
         Day13 day = new Day13();  // https://adventofcode.com/2022/day/13
 
-        String sample = readFile("Day13_sample.txt");
-        String full = readFile("Day13.txt");
+        String sample = readFile("%s_sample.txt".formatted(day.name()));
+        String full = readFile("%s.txt".formatted(day.name()));
 
         assertEquals(13, day.part1(sample));
         assertEquals(4809, day.part1(full));
