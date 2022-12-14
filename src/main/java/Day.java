@@ -15,21 +15,23 @@ public abstract class Day {
         return getClass().getSimpleName();
     }
 
-    void run() {
-        run(readFile("%s.txt".formatted(name())));
+    long run() {
+        return run(readFile("%s.txt".formatted(name())));
     }
 
-    void run(String input) {
+    long run(String input) {
         System.out.printf("Running %s%n", getClass().getSimpleName());
-        run(input, this::part1, "Part 1 result");
-        run(input, this::part2, "Part 2 result");
+        long time1 = run(input, this::part1, "Part 1 result");
+        long time2 = run(input, this::part2, "Part 2 result");
+        return time1 + time2;
     }
 
-    void run(String input, Function<String, String> function, String label) {
+    long run(String input, Function<String, String> function, String label) {
         long start = System.currentTimeMillis();
         String res = function.apply(input);
         long time = System.currentTimeMillis() - start;
         System.out.printf("[%d ms] %s: %s%n", time, label, res);
+        return time;
     }
 
     abstract String part1(String input);
