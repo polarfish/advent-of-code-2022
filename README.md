@@ -26,6 +26,7 @@
 - [Day 12][day.12]
 - [Day 13][day.13]
 - [Day 14][day.14]
+- [Day 15][day.15]
 
 [aoc.2022.1]: https://adventofcode.com/2022/day/1
 [aoc.2022.2]: https://adventofcode.com/2022/day/2
@@ -67,3 +68,4 @@
 [day.12]: src/main/java/Day12.java
 [day.13]: src/main/java/Day13.java
 [day.14]: src/main/java/Day14.java
+[day.15]: src/main/java/Day15.java
