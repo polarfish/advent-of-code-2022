@@ -17,7 +17,7 @@ public class Day15 extends Day {
 
         String sample = readFile("%s_sample.txt".formatted(day.name()));
         String full = readFile("%s.txt".formatted(day.name()));
-ø
+
         assertEquals(26, day.part1(sample));
         assertEquals(5108096, day.part1(full));
 
