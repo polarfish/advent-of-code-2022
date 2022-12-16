@@ -9,12 +9,15 @@ import java.util.regex.Pattern;
 
 public class Day15 extends Day {
 
+    private static final Pattern INPUT_PATTERN = Pattern.compile(
+        "Sensor at x=([\\-\\d]+), y=([\\-\\d]+): closest beacon is at x=([\\-\\d]+), y=([\\-\\d]+)");
+
     public static void main(String[] args) {
         Day15 day = new Day15();  // https://adventofcode.com/2022/day/15
 
         String sample = readFile("%s_sample.txt".formatted(day.name()));
         String full = readFile("%s.txt".formatted(day.name()));
-
+ø
         assertEquals(26, day.part1(sample));
         assertEquals(5108096, day.part1(full));
 
@@ -27,42 +30,14 @@ public class Day15 extends Day {
 
     @Override
     public String part1(String input) {
-        String[] lines = input.split("\n");
-        int[][] sn = new int[lines.length][2];
-        int[] sg = new int[lines.length];
-        int[][] bc = new int[lines.length][2];
-        int minY = Integer.MAX_VALUE;
-        int maxY = Integer.MIN_VALUE;
-
-        Pattern pattern = Pattern.compile(
-            "Sensor at x=([\\-\\d]+), y=([\\-\\d]+): closest beacon is at x=([\\-\\d]+), y=([\\-\\d]+)");
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.matches()) {
-                sn[i][0] = Integer.parseInt(matcher.group(1));
-                sn[i][1] = Integer.parseInt(matcher.group(2));
-                minY = Math.min(minY, sn[i][1]);
-                maxY = Math.max(maxY, sn[i][1]);
-                bc[i][0] = Integer.parseInt(matcher.group(3));
-                bc[i][1] = Integer.parseInt(matcher.group(4));
-                minY = Math.min(minY, bc[i][1]);
-                maxY = Math.max(maxY, bc[i][1]);
-
-                sg[i] = dst(sn[i][0], bc[i][0]) + dst(sn[i][1], bc[i][1]);
-            }
-        }
-
-        int targetLine = minY <= 2000000 && maxY >= 2000000
-            ? 2000000
-            : 10;
+        List<Sensor> sensors = parseSensors(input);
+        int targetLine = sensors.size() < 20 ? 10 : 2000000;
 
         List<int[]> intervals = new ArrayList<>();
-        for (int i = 0; i < lines.length; i++) {
-            if (dst(sn[i][1], targetLine) <= sg[i]) {
-                int overlap = sg[i] - dst(sn[i][1], targetLine);
-                intervals.add(new int[]{sn[i][0] - overlap, sn[i][0] + overlap});
+        for (Sensor sensor : sensors) {
+            if (dst(sensor.y(), targetLine) <= sensor.signal()) {
+                int overlap = sensor.signal() - dst(sensor.y(), targetLine);
+                intervals.add(new int[]{sensor.x() - overlap, sensor.x() + overlap});
             }
         }
 
@@ -82,7 +57,7 @@ public class Day15 extends Day {
 
         return String.valueOf(
             stack.stream().mapToInt(o -> o[1] - o[0] + 1).sum()
-            - Arrays.stream(bc).filter(b -> b[1] == targetLine).map(b -> b[0]).distinct().count()
+            - sensors.stream().map(Sensor::beacon).filter(b -> b.y() == targetLine).map(Beacon::x).distinct().count()
         );
     }
 
@@ -92,46 +67,16 @@ public class Day15 extends Day {
 
     @Override
     public String part2(String input) {
-        String[] lines = input.split("\n");
-        int[][] sn = new int[lines.length][2];
-        int[] sg = new int[lines.length];
-        int[][] bc = new int[lines.length][2];
-        int minY = Integer.MAX_VALUE;
-        int maxY = Integer.MIN_VALUE;
-
-        Pattern pattern = Pattern.compile(
-            "Sensor at x=([\\-\\d]+), y=([\\-\\d]+): closest beacon is at x=([\\-\\d]+), y=([\\-\\d]+)");
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.matches()) {
-                sn[i][0] = Integer.parseInt(matcher.group(1));
-                sn[i][1] = Integer.parseInt(matcher.group(2));
-                minY = Math.min(minY, sn[i][1]);
-                maxY = Math.max(maxY, sn[i][1]);
-                bc[i][0] = Integer.parseInt(matcher.group(3));
-                bc[i][1] = Integer.parseInt(matcher.group(4));
-                minY = Math.min(minY, bc[i][1]);
-                maxY = Math.max(maxY, bc[i][1]);
-
-                sg[i] = dst(sn[i][0], bc[i][0]) + dst(sn[i][1], bc[i][1]);
-            }
-        }
-
-        int positionLimit = minY <= 2000000 && maxY >= 2000000
-            ? 4000000
-            : 20;
+        List<Sensor> sensors = parseSensors(input);
+        int positionLimit = sensors.size() < 20 ? 20 : 4000000;
 
         int x;
         int y;
-        for (int i = 0; i < sn.length; i++) {
-            int[] s = sn[i];
-
-            x = s[0];
-            y = s[1] - sg[i] - 1;
+        for (Sensor s : sensors) {
+            x = s.x();
+            y = s.y() - s.signal() - 1;
             main:
-            while (x <= s[0] + sg[i] && y < s[1]) {
+            while (x <= s.x() + s.signal() && y < s.y()) {
 
                 if (x < 0 || x > positionLimit || y < 0 || y > positionLimit) {
                     x++;
@@ -139,8 +84,8 @@ public class Day15 extends Day {
                     continue;
                 }
 
-                for (int j = 0; j < sn.length; j++) {
-                    if (dst(x, sn[j][0]) + dst(y, sn[j][1]) <= sg[j]) {
+                for (Sensor sensor : sensors) {
+                    if (dst(x, sensor.x()) + dst(y, sensor.y()) <= sensor.signal()) {
                         x++;
                         y++;
                         continue main;
@@ -150,10 +95,10 @@ public class Day15 extends Day {
                 return String.valueOf(x * (long) 4000000 + y);
             }
 
-            x = s[0] + sg[i] + 1;
-            y = s[1];
+            x = s.x() + s.signal() + 1;
+            y = s.y();
             main:
-            while (x > s[0] && y <= s[1] + sg[i]) {
+            while (x > s.x() && y <= s.y() + s.signal()) {
 
                 if (x < 0 || x > positionLimit || y < 0 || y > positionLimit) {
                     x--;
@@ -161,8 +106,8 @@ public class Day15 extends Day {
                     continue;
                 }
 
-                for (int j = 0; j < sn.length; j++) {
-                    if (dst(x, sn[j][0]) + dst(y, sn[j][1]) <= sg[j]) {
+                for (Sensor sensor : sensors) {
+                    if (dst(x, sensor.x()) + dst(y, sensor.y()) <= sensor.signal()) {
                         x--;
                         y++;
                         continue main;
@@ -172,10 +117,10 @@ public class Day15 extends Day {
                 return String.valueOf(x * (long) 4000000 + y);
             }
 
-            x = s[0];
-            y = s[1] + sg[i] + 1;
+            x = s.x();
+            y = s.y() + s.signal() + 1;
             main:
-            while (x >= s[0] - sg[i] && y > s[1]) {
+            while (x >= s.x() - s.signal() && y > s.y()) {
 
                 if (x < 0 || x > positionLimit || y < 0 || y > positionLimit) {
                     x--;
@@ -183,8 +128,8 @@ public class Day15 extends Day {
                     continue;
                 }
 
-                for (int j = 0; j < sn.length; j++) {
-                    if (dst(x, sn[j][0]) + dst(y, sn[j][1]) <= sg[j]) {
+                for (Sensor sensor : sensors) {
+                    if (dst(x, sensor.x()) + dst(y, sensor.y()) <= sensor.signal()) {
                         x--;
                         y--;
                         continue main;
@@ -194,10 +139,10 @@ public class Day15 extends Day {
                 return String.valueOf(x * (long) 4000000 + y);
             }
 
-            x = s[0] - sg[i] - 1;
-            y = s[1];
+            x = s.x() - s.signal() - 1;
+            y = s.y();
             main:
-            while (x < s[0] && y >= s[1] - sg[i]) {
+            while (x < s.x() && y >= s.y() - s.signal()) {
 
                 if (x < 0 || x > positionLimit || y < 0 || y > positionLimit) {
                     x++;
@@ -205,8 +150,8 @@ public class Day15 extends Day {
                     continue;
                 }
 
-                for (int j = 0; j < sn.length; j++) {
-                    if (dst(x, sn[j][0]) + dst(y, sn[j][1]) <= sg[j]) {
+                for (Sensor sensor : sensors) {
+                    if (dst(x, sensor.x()) + dst(y, sensor.y()) <= sensor.signal()) {
                         x++;
                         y--;
                         continue main;
@@ -222,4 +167,32 @@ public class Day15 extends Day {
         );
     }
 
+    private List<Sensor> parseSensors(String input) {
+        return Arrays.stream(input.split("\n")).map(line -> {
+            Matcher matcher = INPUT_PATTERN.matcher(line);
+            if (!matcher.matches()) {
+                return null;
+            }
+
+            int sensorX = Integer.parseInt(matcher.group(1));
+            int sensorY = Integer.parseInt(matcher.group(2));
+            int beaconX = Integer.parseInt(matcher.group(3));
+            int beaconY = Integer.parseInt(matcher.group(4));
+
+            return new Sensor(
+                sensorX,
+                sensorY,
+                dst(sensorX, beaconX) + dst(sensorY, beaconY),
+                new Beacon(beaconX, beaconY));
+
+        }).toList();
+    }
+
+    record Beacon(int x, int y) {
+
+    }
+
+    record Sensor(int x, int y, int signal, Beacon beacon) {
+
+    }
 }
