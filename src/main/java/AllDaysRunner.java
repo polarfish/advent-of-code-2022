@@ -22,7 +22,8 @@ public class AllDaysRunner {
                 new Day14(),
                 new Day15(),
                 new Day16(),
-                new Day17()
+                new Day17(),
+                new Day18()
             ).mapToLong(day -> {
                 System.out.println();
                 return day.run();
