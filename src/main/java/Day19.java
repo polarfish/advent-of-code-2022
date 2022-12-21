@@ -74,14 +74,14 @@ public class Day19 extends Day {
                         {Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(5)), 0, 0},
                         {Integer.parseInt(matcher.group(6)), 0, Integer.parseInt(matcher.group(7)), 0}
                     },
-                    Map.of(
-                        Resource.ORE, Math.max(
+                    new int[]{
+                        Math.max(
                             Math.max(robotsCost[0][0], robotsCost[1][0]),
                             Math.max(robotsCost[2][0], robotsCost[3][0])),
-                        Resource.CLAY, robotsCost[2][1],
-                        Resource.OBSIDIAN, robotsCost[3][2],
-                        Resource.GEODE, Integer.MAX_VALUE
-                    ),
+                        robotsCost[2][1],
+                        robotsCost[3][2],
+                        Integer.MAX_VALUE
+                    },
                     Map.of(
                         Resource.ORE, 1,
                         Resource.CLAY, 0,
@@ -101,8 +101,6 @@ public class Day19 extends Day {
     }
 
     int calculateMaxGeodes(State initialState) {
-
-        // System.out.println("simulating " + initialState.toString());
 
         int maxGeodes = 0;
         Resource[] robotsOptions = {
@@ -124,7 +122,6 @@ public class Day19 extends Day {
                 continue;
             }
 
-//            System.out.printf("Processed cycles %d Next cycle, queue length is %d max geodes %d%n", cyclesProcessed++, queue.size(), maxGeodes);
             int optionsCount = 0;
             if (state.minutesLeft() > 1) {
                 for (Resource robot : robotsOptions) {
@@ -156,7 +153,7 @@ public class Day19 extends Day {
         int timeLimit,
         int minute,
         int[][] robotsCost,
-        Map<Resource, Integer> maxRobotsCost,
+        int[] maxRobotsCost,
         Map<Resource, Integer> robotsCount,
         Map<Resource, Integer> resources
     ) {
@@ -170,8 +167,7 @@ public class Day19 extends Day {
                 return null;
             }
 
-            if (robotsCount.get(robot) >= maxRobotsCost.get(robot)) {
-                //System.out.printf("Skip building %s robot because it is enough of them %n", robot);
+            if (robotsCount.get(robot) >= maxRobotsCost[robot.ordinal()]) {
                 return null;
             }
 
