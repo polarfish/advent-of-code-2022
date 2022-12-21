@@ -30,7 +30,7 @@
 - [Day 16][day.16]
 - [Day 17][day.17]
 - [Day 18][day.18]
-- Day 19
+- [Day 19][day.19]
 - [Day 20][day.20]
 - [Day 21][day.21]
 
@@ -78,5 +78,6 @@
 [day.16]: src/main/java/Day16.java
 [day.17]: src/main/java/Day17.java
 [day.18]: src/main/java/Day18.java
+[day.19]: src/main/java/Day19.java
 [day.20]: src/main/java/Day20.java
 [day.21]: src/main/java/Day21.java
