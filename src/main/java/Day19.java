@@ -64,43 +64,22 @@ public class Day19 extends Day {
         for (String line : lines) {
             Matcher matcher = INPUT_PATTERN.matcher(line);
             if (matcher.find()) {
-                Map<Resource, Map<Resource, Integer>> robotsCost;
+                int[][] robotsCost;
                 blueprints.add(new State(
                     timeLimit,
                     0,
-                    robotsCost = Map.of(
-                        Resource.ORE, Map.of(
-                            Resource.ORE, Integer.valueOf(matcher.group(2)),
-                            Resource.CLAY, 0,
-                            Resource.OBSIDIAN, 0,
-                            Resource.GEODE, 0
-                        ),
-                        Resource.CLAY, Map.of(
-                            Resource.ORE, Integer.valueOf(matcher.group(3)),
-                            Resource.CLAY, 0,
-                            Resource.OBSIDIAN, 0,
-                            Resource.GEODE, 0
-                        ),
-                        Resource.OBSIDIAN, Map.of(
-                            Resource.ORE, Integer.valueOf(matcher.group(4)),
-                            Resource.CLAY, Integer.valueOf(matcher.group(5)),
-                            Resource.OBSIDIAN, 0,
-                            Resource.GEODE, 0
-                        ),
-                        Resource.GEODE, Map.of(
-                            Resource.ORE, Integer.valueOf(matcher.group(6)),
-                            Resource.CLAY, 0,
-                            Resource.OBSIDIAN, Integer.valueOf(matcher.group(7)),
-                            Resource.GEODE, 0
-                        )
-                    ),
+                    robotsCost = new int[][]{
+                        {Integer.parseInt(matcher.group(2)), 0, 0, 0},
+                        {Integer.parseInt(matcher.group(3)), 0, 0, 0},
+                        {Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(5)), 0, 0},
+                        {Integer.parseInt(matcher.group(6)), 0, Integer.parseInt(matcher.group(7)), 0}
+                    },
                     Map.of(
-                        Resource.ORE,
-                        robotsCost.values().stream().mapToInt(m -> m.get(Resource.ORE)).max().orElseThrow(),
-                        Resource.CLAY,
-                        robotsCost.values().stream().mapToInt(m -> m.get(Resource.CLAY)).max().orElseThrow(),
-                        Resource.OBSIDIAN,
-                        robotsCost.values().stream().mapToInt(m -> m.get(Resource.OBSIDIAN)).max().orElseThrow(),
+                        Resource.ORE, Math.max(
+                            Math.max(robotsCost[0][0], robotsCost[1][0]),
+                            Math.max(robotsCost[2][0], robotsCost[3][0])),
+                        Resource.CLAY, robotsCost[2][1],
+                        Resource.OBSIDIAN, robotsCost[3][2],
                         Resource.GEODE, Integer.MAX_VALUE
                     ),
                     Map.of(
@@ -176,7 +155,7 @@ public class Day19 extends Day {
     record State(
         int timeLimit,
         int minute,
-        Map<Resource, Map<Resource, Integer>> robotsCost,
+        int[][] robotsCost,
         Map<Resource, Integer> maxRobotsCost,
         Map<Resource, Integer> robotsCount,
         Map<Resource, Integer> resources
@@ -197,15 +176,17 @@ public class Day19 extends Day {
             }
 
             int minutesRequiredToStartBuilding = 0;
-            Map<Resource, Integer> robotCost = robotsCost.get(robot);
-            for (Resource resource : robotCost.keySet()) {
-                if (resources.get(resource) >= robotCost.get(resource)) {
+            int[] robotCost = robotsCost[robot.ordinal()];
+
+            for (int i = 0; i < robotCost.length; i++) {
+                Resource resource = Resource.values()[i];
+                if (resources.get(resource) >= robotCost[i]) {
                     continue;
                 }
 
                 minutesRequiredToStartBuilding = Math.max(
                     minutesRequiredToStartBuilding,
-                    (robotCost.get(resource) - resources.get(resource) + robotsCount.get(resource) - 1)
+                    (robotCost[i] - resources.get(resource) + robotsCount.get(resource) - 1)
                     / robotsCount.get(resource)
                 );
             }
@@ -225,26 +206,28 @@ public class Day19 extends Day {
                 ),
                 Map.of(
                     Resource.ORE, resources.get(Resource.ORE) + minutesRequiredToBuild * robotsCount.get(Resource.ORE)
-                                  - robotCost.get(Resource.ORE),
+                                  - robotCost[Resource.ORE.ordinal()],
                     Resource.CLAY,
                     resources.get(Resource.CLAY) + minutesRequiredToBuild * robotsCount.get(Resource.CLAY)
-                    - robotCost.get(Resource.CLAY),
+                    - robotCost[Resource.CLAY.ordinal()],
                     Resource.OBSIDIAN,
                     resources.get(Resource.OBSIDIAN) + minutesRequiredToBuild * robotsCount.get(Resource.OBSIDIAN)
-                    - robotCost.get(Resource.OBSIDIAN),
+                    - robotCost[Resource.OBSIDIAN.ordinal()],
                     Resource.GEODE,
                     resources.get(Resource.GEODE) + minutesRequiredToBuild * robotsCount.get(Resource.GEODE)
-                    - robotCost.get(Resource.GEODE)
+                    - robotCost[Resource.GEODE.ordinal()]
                 ));
         }
 
         private boolean canBuildRobot(Resource robot) {
-            Map<Resource, Integer> robotCost = robotsCost.get(robot);
-            for (Resource resource : robotCost.keySet()) {
-                Integer resourceCost = robotCost.get(resource);
+            int[] robotCost = robotsCost[robot.ordinal()];
+
+            for (int i = 0; i < robotCost.length; i++) {
+                int resourceCost = robotCost[i];
                 if (resourceCost == 0) {
                     continue;
                 }
+                Resource resource = Resource.values()[i];
                 int totalPotentialResourceCount =
                     resources.get(resource) + robotsCount.get(resource) * minutesLeft();
                 if (resourceCost >= totalPotentialResourceCount) {
@@ -254,14 +237,5 @@ public class Day19 extends Day {
             return true;
         }
 
-        @Override
-        public String toString() {
-            return "\n    State{" +
-                   "\n        minute=" + minute +
-                   ",\n        robotsCost=" + robotsCost +
-                   ",\n        robotsCount=" + robotsCount +
-                   ",\n        resources=" + resources +
-                   "\n    }";
-        }
     }
 }
