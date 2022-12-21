@@ -32,6 +32,7 @@
 - [Day 18][day.18]
 - Day 19
 - [Day 20][day.20]
+- [Day 21][day.21]
 
 [aoc.2022.1]: https://adventofcode.com/2022/day/1
 [aoc.2022.2]: https://adventofcode.com/2022/day/2
@@ -78,3 +79,4 @@
 [day.17]: src/main/java/Day17.java
 [day.18]: src/main/java/Day18.java
 [day.20]: src/main/java/Day20.java
+[day.21]: src/main/java/Day21.java
