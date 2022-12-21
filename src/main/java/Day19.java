@@ -2,7 +2,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -83,12 +82,7 @@ public class Day19 extends Day {
                         Integer.MAX_VALUE
                     },
                     new int[]{1, 0, 0, 0},
-                    Map.of(
-                        Resource.ORE, 0,
-                        Resource.CLAY, 0,
-                        Resource.OBSIDIAN, 0,
-                        Resource.GEODE, 0
-                    )
+                    new int[]{0, 0, 0, 0}
                 ));
             }
         }
@@ -109,7 +103,7 @@ public class Day19 extends Day {
         State state;
         while ((state = queue.poll()) != null) {
 
-            int potentialMaxGeodes = state.resources().get(Resource.GEODE)
+            int potentialMaxGeodes = state.resources()[Resource.GEODE.ordinal()]
                                      + state.robotsCount()[Resource.GEODE.ordinal()] * state.minutesLeft()
                                      + (state.minutesLeft() - 1) * state.minutesLeft() / 2;
 
@@ -129,7 +123,7 @@ public class Day19 extends Day {
                 }
             }
             if (optionsCount == 0) {
-                int thisBranchMaxGeodes = state.resources().get(Resource.GEODE)
+                int thisBranchMaxGeodes = state.resources()[Resource.GEODE.ordinal()]
                                           + state.robotsCount()[Resource.GEODE.ordinal()] * state.minutesLeft();
                 maxGeodes = Math.max(maxGeodes, thisBranchMaxGeodes);
             }
@@ -150,7 +144,7 @@ public class Day19 extends Day {
         int[][] robotsCost,
         int[] maxRobotsCost,
         int[] robotsCount,
-        Map<Resource, Integer> resources
+        int[] resources
     ) {
 
         int minutesLeft() {
@@ -171,13 +165,13 @@ public class Day19 extends Day {
 
             for (int i = 0; i < robotCost.length; i++) {
                 Resource resource = Resource.values()[i];
-                if (resources.get(resource) >= robotCost[i]) {
+                if (resources[resource.ordinal()] >= robotCost[i]) {
                     continue;
                 }
 
                 minutesRequiredToStartBuilding = Math.max(
                     minutesRequiredToStartBuilding,
-                    (robotCost[i] - resources.get(resource) + robotsCount[resource.ordinal()] - 1)
+                    (robotCost[i] - resources[resource.ordinal()] + robotsCount[resource.ordinal()] - 1)
                     / robotsCount[resource.ordinal()]
                 );
             }
@@ -195,20 +189,18 @@ public class Day19 extends Day {
                     robotsCount[Resource.OBSIDIAN.ordinal()] + (robot == Resource.OBSIDIAN ? 1 : 0),
                     robotsCount[Resource.GEODE.ordinal()] + (robot == Resource.GEODE ? 1 : 0)
                 },
-                Map.of(
-                    Resource.ORE,
-                    resources.get(Resource.ORE) + minutesRequiredToBuild * robotsCount[Resource.ORE.ordinal()]
+                new int[]{
+                    resources[Resource.ORE.ordinal()] + minutesRequiredToBuild * robotsCount[Resource.ORE.ordinal()]
                     - robotCost[Resource.ORE.ordinal()],
-                    Resource.CLAY,
-                    resources.get(Resource.CLAY) + minutesRequiredToBuild * robotsCount[Resource.CLAY.ordinal()]
+                    resources[Resource.CLAY.ordinal()] + minutesRequiredToBuild * robotsCount[Resource.CLAY.ordinal()]
                     - robotCost[Resource.CLAY.ordinal()],
-                    Resource.OBSIDIAN,
-                    resources.get(Resource.OBSIDIAN) + minutesRequiredToBuild * robotsCount[Resource.OBSIDIAN.ordinal()]
+                    resources[Resource.OBSIDIAN.ordinal()]
+                    + minutesRequiredToBuild * robotsCount[Resource.OBSIDIAN.ordinal()]
                     - robotCost[Resource.OBSIDIAN.ordinal()],
-                    Resource.GEODE,
-                    resources.get(Resource.GEODE) + minutesRequiredToBuild * robotsCount[Resource.GEODE.ordinal()]
+                    resources[Resource.GEODE.ordinal()] + minutesRequiredToBuild * robotsCount[Resource.GEODE.ordinal()]
                     - robotCost[Resource.GEODE.ordinal()]
-                ));
+                }
+            );
         }
 
         private boolean canBuildRobot(Resource robot) {
@@ -221,7 +213,7 @@ public class Day19 extends Day {
                 }
                 Resource resource = Resource.values()[i];
                 int totalPotentialResourceCount =
-                    resources.get(resource) + robotsCount[resource.ordinal()] * minutesLeft();
+                    resources[resource.ordinal()] + robotsCount[resource.ordinal()] * minutesLeft();
                 if (resourceCost >= totalPotentialResourceCount) {
                     return false;
                 }
