@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public class Day22 extends Day {
 
@@ -27,35 +27,34 @@ public class Day22 extends Day {
 
     private static final Map<String, List<Wrapper>> LAYOUTS = Map.of(
         "4-2456ab", List.of(
-            new Wrapper(8, 0, 11, 0, 3, pos -> new int[]{11 - pos[X], 4, 1}),
-            new Wrapper(11, 4, 11, 7, 0, pos -> new int[]{19 - pos[Y], 8, 1}),
-            new Wrapper(8, 11, 11, 11, 1, pos -> new int[]{11 - pos[X], 7, 3}),
-            new Wrapper(4, 4, 7, 4, 3, pos -> new int[]{8, pos[X] - 4, 0})
+            new Wrapper(8, 0, 11, 0, 3, pos -> setPos(pos, 11 - pos[X], 4, 1)),
+            new Wrapper(11, 4, 11, 7, 0, pos -> setPos(pos, 19 - pos[Y], 8, 1)),
+            new Wrapper(8, 11, 11, 11, 1, pos -> setPos(pos, 11 - pos[X], 7, 3)),
+            new Wrapper(4, 4, 7, 4, 3, pos -> setPos(pos, 8, pos[X] - 4, 0))
         ),
         "50-12589c", List.of(
-            // light green
-            new Wrapper(50, 0, 99, 0, 3, pos -> new int[]{0, pos[X] + 100, 0}),
-            new Wrapper(0, 150, 0, 199, 2, pos -> new int[]{pos[Y] - 100, 0, 1}),
-            // green
-            new Wrapper(49, 150, 49, 199, 0, pos -> new int[]{pos[Y] - 100, 149, 3}),
-            new Wrapper(50, 149, 99, 149, 1, pos -> new int[]{49, pos[X] + 100, 2}),
-            // blue
-            new Wrapper(0, 100, 49, 100, 3, pos -> new int[]{50, pos[X] + 50, 0}),
-            new Wrapper(50, 50, 50, 99, 2, pos -> new int[]{pos[Y] - 50, 100, 1}),
-            // purple
-            new Wrapper(99, 100, 99, 149, 0, pos -> new int[]{149, 149 - pos[Y], 2}),
-            new Wrapper(149, 0, 149, 49, 0, pos -> new int[]{99, 149 - pos[Y], 2}),
-            // pink
-            new Wrapper(100, 0, 149, 0, 3, pos -> new int[]{pos[X] - 100, 199, 3}),
-            new Wrapper(0, 199, 49, 199, 1, pos -> new int[]{pos[X] + 100, 0, 1}),
-            // orange
-            new Wrapper(100, 49, 149, 49, 1, pos -> new int[]{99, pos[X] - 50, 2}),
-            new Wrapper(99, 50, 99, 99, 0, pos -> new int[]{pos[Y] + 50, 49, 3}),
-            // red
-            new Wrapper(0, 100, 0, 149, 2, pos -> new int[]{50, 149 - pos[Y], 0}),
-            new Wrapper(50, 0, 50, 49, 2, pos -> new int[]{0, 149 - pos[Y], 0})
+            new Wrapper(50, 0, 99, 0, 3, pos -> setPos(pos, 0, pos[X] + 100, 0)),
+            new Wrapper(0, 150, 0, 199, 2, pos -> setPos(pos, pos[Y] - 100, 0, 1)),
+            new Wrapper(49, 150, 49, 199, 0, pos -> setPos(pos, pos[Y] - 100, 149, 3)),
+            new Wrapper(50, 149, 99, 149, 1, pos -> setPos(pos, 49, pos[X] + 100, 2)),
+            new Wrapper(0, 100, 49, 100, 3, pos -> setPos(pos, 50, pos[X] + 50, 0)),
+            new Wrapper(50, 50, 50, 99, 2, pos -> setPos(pos, pos[Y] - 50, 100, 1)),
+            new Wrapper(99, 100, 99, 149, 0, pos -> setPos(pos, 149, 149 - pos[Y], 2)),
+            new Wrapper(149, 0, 149, 49, 0, pos -> setPos(pos, 99, 149 - pos[Y], 2)),
+            new Wrapper(100, 0, 149, 0, 3, pos -> setPos(pos, pos[X] - 100, 199, 3)),
+            new Wrapper(0, 199, 49, 199, 1, pos -> setPos(pos, pos[X] + 100, 0, 1)),
+            new Wrapper(100, 49, 149, 49, 1, pos -> setPos(pos, 99, pos[X] - 50, 2)),
+            new Wrapper(99, 50, 99, 99, 0, pos -> setPos(pos, pos[Y] + 50, 49, 3)),
+            new Wrapper(0, 100, 0, 149, 2, pos -> setPos(pos, 50, 149 - pos[Y], 0)),
+            new Wrapper(50, 0, 50, 49, 2, pos -> setPos(pos, 0, 149 - pos[Y], 0))
         )
     );
+
+    private static void setPos(int[] pos, int x, int y, int dir) {
+        pos[X] = x;
+        pos[Y] = y;
+        pos[DIR] = dir;
+    }
 
     @Override
     public String part1(String input) {
@@ -165,7 +164,7 @@ public class Day22 extends Day {
     }
 
     record Wrapper(int x1, int y1, int x2, int y2, int dir,
-                   Function<int[], int[]> wrapFunction) {
+                   Consumer<int[]> wrapModifier) {
 
         boolean applies(int[] pos) {
             return pos[DIR] == dir & pos[X] >= x1 && pos[X] <= x2 && pos[Y] >= y1 && pos[Y] <= y2;
@@ -173,41 +172,38 @@ public class Day22 extends Day {
     }
 
     void moveCubic(String layout, char[][] map, int[] pos, int steps) {
-        int[] newPos;
+        int[] newPos = new int[3];
         for (int i = 0; i < steps; i++) {
+            System.arraycopy(pos, 0, newPos, 0, 3);
             int x = pos[X];
             int y = pos[Y];
             switch (pos[DIR]) {
                 case 0 -> {
                     if (x == map[0].length - 1 || map[pos[Y]][x + 1] == ' ') {
-                        newPos = wrapCubic(layout, pos);
+                        wrapCubic(layout, newPos);
                     } else {
-                        newPos = Arrays.copyOf(pos, 3);
                         newPos[X]++;
                     }
                 }
                 case 1 -> {
                     if (y == map.length - 1 || map[y + 1][x] == ' ') {
-                        newPos = wrapCubic(layout, pos);
+                        wrapCubic(layout, newPos);
                     } else {
-                        newPos = Arrays.copyOf(pos, 3);
                         newPos[Y]++;
                     }
 
                 }
                 case 2 -> {
                     if (x == 0 || map[y][x - 1] == ' ') {
-                        newPos = wrapCubic(layout, pos);
+                        wrapCubic(layout, newPos);
                     } else {
-                        newPos = Arrays.copyOf(pos, 3);
                         newPos[X]--;
                     }
                 }
                 case 3 -> {
                     if (y == 0 || map[y - 1][x] == ' ') {
-                        newPos = wrapCubic(layout, pos);
+                        wrapCubic(layout, newPos);
                     } else {
-                        newPos = Arrays.copyOf(pos, 3);
                         newPos[Y]--;
                     }
                 }
@@ -222,12 +218,12 @@ public class Day22 extends Day {
         }
     }
 
-    int[] wrapCubic(String layout, int[] pos) {
-        return LAYOUTS.get(layout).stream()
+    void wrapCubic(String layout, int[] pos) {
+        LAYOUTS.get(layout).stream()
             .filter(wrapper -> wrapper.applies(pos))
             .findFirst()
             .orElseThrow(() -> new RuntimeException("Missing wrap function for " + Arrays.toString(pos)))
-            .wrapFunction.apply(pos);
+            .wrapModifier.accept(pos);
     }
 
     void moveFlat(char[][] map, int[] pos, int steps) {
