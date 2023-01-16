@@ -25,10 +25,6 @@ public class Day24 extends Day {
         day.run(full, day::part2, "Part 2 result");
     }
 
-    private static final int X = 0;
-    private static final int Y = 1;
-    private static final int MIN = 2;
-
     @Override
     public String part1(String input) {
         Basin basin = parseBasin(input);
@@ -58,7 +54,7 @@ public class Day24 extends Day {
         Point currentDst = dst[i];
         int result = Integer.MAX_VALUE;
         while (!queue.isEmpty()) {
-            State nextState = null;
+            State nextState;
             State state = queue.poll();
 
             if (state.x == currentDst.x() && state.y == currentDst.y()) {
@@ -79,45 +75,40 @@ public class Day24 extends Day {
             // going down
             if (state.y < basin.height() - 1 && map[state.y + 1][state.x] == 0) {
                 nextState = new State(nextMinute, state.x, state.y + 1);
-                if (!visited.contains(nextState)) {
+                if (visited.add(nextState)) {
                     queue.add(nextState);
-                    visited.add(nextState);
                 }
             }
 
             // going right
             if (map[state.y][state.x + 1] == 0) {
                 nextState = new State(nextMinute, state.x + 1, state.y);
-                if (!visited.contains(nextState)) {
+                if (visited.add(nextState)) {
                     queue.add(nextState);
-                    visited.add(nextState);
                 }
             }
 
             // waiting
             if (map[state.y][state.x] == 0) {
                 nextState = new State(nextMinute, state.x, state.y);
-                if (!visited.contains(nextState)) {
+                if (visited.add(nextState)) {
                     queue.add(nextState);
-                    visited.add(nextState);
                 }
             }
 
             // going left
             if (map[state.y][state.x - 1] == 0) {
                 nextState = new State(nextMinute, state.x - 1, state.y);
-                if (!visited.contains(nextState)) {
+                if (visited.add(nextState)) {
                     queue.add(nextState);
-                    visited.add(nextState);
                 }
             }
 
             // going up
             if (state.y > 0 && map[state.y - 1][state.x] == 0) {
                 nextState = new State(nextMinute, state.x, state.y - 1);
-                if (!visited.contains(nextState)) {
+                if (visited.add(nextState)) {
                     queue.add(nextState);
-                    visited.add(nextState);
                 }
             }
 
