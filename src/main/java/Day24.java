@@ -27,55 +27,58 @@ public class Day24 extends Day {
 
     private static final int X = 0;
     private static final int Y = 1;
+    private static final int MIN = 2;
 
     @Override
     public String part1(String input) {
         Basin basin = parseBasin(input);
-        int result = findWay(basin, new int[]{1, 0}, new int[]{basin.width() - 2, basin.height() - 1});
+        Point src = new Point(1, 0);
+        Point dest = new Point(basin.width() - 2, basin.height() - 1);
+        int result = findWay(basin, src, dest);
         return String.valueOf(result);
     }
 
     @Override
     public String part2(String input) {
         Basin basin = parseBasin(input);
-        int result = findWay(basin, new int[]{1, 0},
-            new int[]{basin.width() - 2, basin.height() - 1},
-            new int[]{1, 0},
-            new int[]{basin.width() - 2, basin.height() - 1});
+        Point src = new Point(1, 0);
+        Point dest = new Point(basin.width() - 2, basin.height() - 1);
+        int result = findWay(basin, src, dest, src, dest);
         return String.valueOf(result);
     }
 
-    private int findWay(Basin basin, int[] src, int[]... dst) {
-        State nextState = new State(0, src[X], src[Y], 0);
+    private int findWay(Basin basin, Point src, Point... dst) {
+        State initialState = new State(0, src.x(), src.y());
         Set<State> visited = new HashSet<>();
         Queue<State> queue = new ArrayDeque<>();
-        queue.add(nextState);
-        visited.add(nextState);
+        queue.add(initialState);
+        visited.add(initialState);
 
         int i = 0;
-        int[] currentDst = dst[i];
+        Point currentDst = dst[i];
         int result = Integer.MAX_VALUE;
         while (!queue.isEmpty()) {
-            State s = queue.poll();
+            State nextState = null;
+            State state = queue.poll();
 
-            if (s.x == currentDst[X] && s.y == currentDst[Y]) {
+            if (state.x == currentDst.x() && state.y == currentDst.y()) {
 
                 if (++i < dst.length) {
                     queue.clear();
                     visited.clear();
                     currentDst = dst[i];
                 } else {
-                    result = s.minute;
+                    result = state.minute;
                     break;
                 }
             }
 
-            int nextMinute = s.minute + 1;
+            int nextMinute = state.minute + 1;
             int[][] map = basin.getMap(nextMinute);
 
             // going down
-            if (s.y < basin.height() - 1 && map[s.y + 1][s.x] == 0) {
-                nextState = new State(nextMinute, s.x, s.y + 1, nextMinute % basin.lcm());
+            if (state.y < basin.height() - 1 && map[state.y + 1][state.x] == 0) {
+                nextState = new State(nextMinute, state.x, state.y + 1);
                 if (!visited.contains(nextState)) {
                     queue.add(nextState);
                     visited.add(nextState);
@@ -83,8 +86,8 @@ public class Day24 extends Day {
             }
 
             // going right
-            if (map[s.y][s.x + 1] == 0) {
-                nextState = new State(nextMinute, s.x + 1, s.y, nextMinute % basin.lcm());
+            if (map[state.y][state.x + 1] == 0) {
+                nextState = new State(nextMinute, state.x + 1, state.y);
                 if (!visited.contains(nextState)) {
                     queue.add(nextState);
                     visited.add(nextState);
@@ -92,8 +95,8 @@ public class Day24 extends Day {
             }
 
             // waiting
-            if (map[s.y][s.x] == 0) {
-                nextState = new State(nextMinute, s.x, s.y, nextMinute % basin.lcm());
+            if (map[state.y][state.x] == 0) {
+                nextState = new State(nextMinute, state.x, state.y);
                 if (!visited.contains(nextState)) {
                     queue.add(nextState);
                     visited.add(nextState);
@@ -101,8 +104,8 @@ public class Day24 extends Day {
             }
 
             // going left
-            if (map[s.y][s.x - 1] == 0) {
-                nextState = new State(nextMinute, s.x - 1, s.y, nextMinute % basin.lcm());
+            if (map[state.y][state.x - 1] == 0) {
+                nextState = new State(nextMinute, state.x - 1, state.y);
                 if (!visited.contains(nextState)) {
                     queue.add(nextState);
                     visited.add(nextState);
@@ -110,8 +113,8 @@ public class Day24 extends Day {
             }
 
             // going up
-            if (s.y > 0 && map[s.y - 1][s.x] == 0) {
-                nextState = new State(nextMinute, s.x, s.y - 1, nextMinute % basin.lcm());
+            if (state.y > 0 && map[state.y - 1][state.x] == 0) {
+                nextState = new State(nextMinute, state.x, state.y - 1);
                 if (!visited.contains(nextState)) {
                     queue.add(nextState);
                     visited.add(nextState);
@@ -123,35 +126,12 @@ public class Day24 extends Day {
         return result;
     }
 
-    record State(int minute, int x, int y, int z) {
+    record State(int minute, int x, int y) {
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
+    }
 
-            State state = (State) o;
+    record Point(int x, int y) {
 
-            if (x != state.x) {
-                return false;
-            }
-            if (y != state.y) {
-                return false;
-            }
-            return z == state.z;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = x;
-            result = 31 * result + y;
-            result = 31 * result + z;
-            return result;
-        }
     }
 
     Basin parseBasin(String input) {
@@ -247,10 +227,6 @@ public class Day24 extends Day {
 
         public int width() {
             return blizzards.get(0).width;
-        }
-
-        public int lcm() {
-            return lcm;
         }
 
         private void calculateNextState() {
