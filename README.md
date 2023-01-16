@@ -35,6 +35,7 @@
 - [Day 21][day.21]
 - [Day 22][day.22]
 - [Day 23][day.23]
+- [Day 24][day.24]
 - [Day 25][day.25]
 
 [aoc.2022.1]: https://adventofcode.com/2022/day/1
@@ -86,4 +87,5 @@
 [day.21]: src/main/java/Day21.java
 [day.22]: src/main/java/Day22.java
 [day.23]: src/main/java/Day23.java
+[day.24]: src/main/java/Day24.java
 [day.25]: src/main/java/Day25.java
